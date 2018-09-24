@@ -1,8 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Post;
-use App\Like;
 use App\Flight;
 use App\Trip;
 use Illuminate\Http\Request;
@@ -11,13 +9,33 @@ use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
 {
+     /**
+     * Returns a list of all trips
+     * 
+     *
+     */
     public function getTrips()
     {
-
-        $trips = Trip::orderBy('created_at','desc')->get();
-        return view('trips',['trips'=> $trips]);
+        $trips = Trip::with('flights')->get();
+        return response()->json($trips);
     }
 
+    /**
+     * Returns a list of all airports, alphabetical order
+     * 
+     *
+     */
+    public function getAirports()
+    {
+        $airports = Airport::orderBy('name','asc')->get();
+        return response()->json($airports);
+    }
+
+    /**
+     * Creates a Trip
+     * 
+     *
+     */
     public function postCreateTrip(Request $request)
     {
         $this->validate($request,[
@@ -26,50 +44,40 @@ class TripController extends Controller
 
         ]);
 
-        $trip = new Trip();
-        $trip->name =$request['name'];
-        $trip->save();
-       
-        return redirect()->route('trip.view')->with(['id'=> $trip->id]);
+        Trip::CreateTrip($request['name']);
+        return response()->json(['Status'=>'Success'],200);
+      
     }
 
+    /**
+     * Deletes a Trip
+     * @param  int  Id of trip to be deleted
+     *
+     */
     public function getDeleteTrip($tripId)
     {
-        $trip = Trip::where('id',$tripId)->first();
-        if($trip)
-        {
-            foreach($trip->flights as $f)
-            {
-                $f->delete();
-            }
-            $trip->delete();
-            return response()->json(['Status'=>'Success'],200);
-        }
-        else
-        {
-            return response()->json(['Status'=>'Fail'],400);
-        }
+        Trip::DeleteTrip($tripId);
     }
 
-    public function getDeleteFlight($flightId)
+    /**
+     * Deletes a Flight
+     * @param  int  Id of flight to be deleted
+     *
+     */
+    public function getDeleteFlight($flight_id)
     {
-        $flight = Flight::where('id',$flightId)->first();
-        if($flight)
-        {
-            $flight->delete();
-            return response()->json(['Status'=>'Success'],200);
-        }
-        else
-        {
-            return response()->json(['Status'=>'Fail'],400);
-        }
+        Flight::DeleteFlight($flight_id);
     }
 
+    /**
+     *Returns specified Trip with its flights
+     * @param  int  Id of flight
+     *
+     */
     public function getSingleTrip($trip_id)
     {
         $trip = Trip::with('flights')->where('id',$trip_id)->first();
-        return response()->json(['Trip'=>$trip],200);
-        //return view('flight',['trip'=> $trip]);
+        return response()->json($trip);     
     }
     
     public function postAddFlight(Request $request)
@@ -83,18 +91,25 @@ class TripController extends Controller
 
         if($trip)
         {
-            $flight = new Flight();
-            $flight->airport = $request['airport'];
-            $flight->trip_id = $tripId;
-            $flight->save();
+            Flight::CreateFlight($request['airport'],$trip->id);
             return response()->json(['Status'=>'Success'],200);
         }
         else
         {
             return response()->json(['Status'=>'Fail'],400);
         }
-        //return redirect()->route('trip.view',['trip_id' =>  $flight->trip_id]);
+        
     }
-    
+
+    /**
+     *Returns All Flights
+     * 
+     *
+     */
+    public function getFlights()
+    {
+        $flights = Flight::all();
+        return response()->json($flights);
+    }
 
 }

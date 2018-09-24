@@ -14,19 +14,10 @@ app()->bind('trip', function() {
     return new \App\Trip;
 });
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-Route::get('/test', function () {
-    return Trip::getName();
+app()->bind('flight', function() {
+    return new \App\Flight;
 });
 
-Route::post('/createpost',[
-    'uses' => 'PostController@postCreatePost',
-'as'=>'post.create',
-'middleware'=>'auth'
-]);
 
 Route::get('/trip-delete/{trip_id}',[
     'uses' => 'TripController@getDeleteTrip',
@@ -51,4 +42,9 @@ Route::get('/trips/{trip_id}',[
 Route::post('/addflight',[
     'uses' => 'TripController@postAddFlight',
 'as'=>'flight'
+]);
+
+Route::get('/flight-delete/{flight_id}',[
+    'uses' => 'TripController@getDeleteFlight',
+'as'=>'flight.delete'
 ]);
