@@ -12,7 +12,7 @@ class TripController extends Controller
        /**
      * Returns a list of all airports, alphabetical order
      * 
-     * route: /api/getAirports
+     * route: /getAirports
      */
     public function getAirports()
     {
@@ -22,12 +22,13 @@ class TripController extends Controller
 
      /**
      * Returns a list of all trips
-     *  route: /api/trips
+     *  route: /trips
      *
      */
     public function getTrips()
     {
-        Trip::GetAllTrips();
+        $trips = Trip::GetAllTrips();      
+        return response()->json($trips);
     }
 
 
@@ -45,30 +46,31 @@ class TripController extends Controller
         ]);
         
         $name = $request['name'];
-
-        Trip::CreateTrip($name);
-     
+        $result = Trip::CreateTrip($name);
+        return response()->json($result);
     }
 
     /**
      * Deletes a Trip
      * @param  int  Id of trip to be deleted
-     * route: /api/trip-delete/{trip_id}
+     * route: /trip-delete/{trip_id}
      */
     public function getDeleteTrip($tripId)
     {
-        Trip::DeleteTrip($tripId);
+       $result = Trip::DeleteTrip($tripId);
+       return response()->json($result);
     }
 
 
     /**
      *Returns specified Trip with its flights
      * @param  int  Id of flight
-     * route: /api/trips/{trip_id}
+     * route: /trips/{trip_id}
      */
     public function getSingleTrip($trip_id)
     {
-       Trip::GetTrip($trip_id); 
+       $trip = Trip::GetTrip($trip_id); 
+       return response()->json($trip);
     }
     
 }

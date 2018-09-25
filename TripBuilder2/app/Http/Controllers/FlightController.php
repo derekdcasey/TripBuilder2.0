@@ -10,7 +10,7 @@ class FlightController extends Controller
     /**
      *Returns All Flights
      * 
-     * route: /api/addflight
+     * route: /addflight
      *
      */
     public function postAddFlight(Request $request)
@@ -24,36 +24,40 @@ class FlightController extends Controller
         $airport = $request['airport'];
         $tripId = $request['trip_id'];
 
-        Flight::CreateFlight($airport, $tripId);
+        $result = Flight::CreateFlight($airport, $tripId);
+        return response()->json($result);
     }
 
     /**
      *Returns All Flights
-     *  route: /api/flights
+     *  route: /flights
      *
      */
     public function getFlights()
     {
-        Flight::GetAllFlights();
+        $flights = Flight::GetAllFlights();
+        return response()->json($flights);
     }
 
     /**
      * Deletes a Flight
      * @param  int  Id of flight to be deleted
-     * route: /api/flight-delete/{flight_id}
+     * route: /flight-delete/{flight_id}
      */
     public function getDeleteFlight($flight_id)
     {
-        Flight::DeleteFlight($flight_id);
+        $result = Flight::DeleteFlight($flight_id);
+        return response()->json($result);
     }
 
      /**
      *Returns specified Trip with its flights
      * @param  int  Id of flight
-     * route: /api/flights/{flight_id}
+     * route: /flights/{flight_id}
      */
     public function getSingleFlight($flight_id)
     {
-        Flight::GetFlight($flight_id);
+        $flight = Flight::GetFlight($flight_id);
+        return response()->json($flight);
     }
 }

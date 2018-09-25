@@ -19,10 +19,15 @@ class Flight extends Model
             $flight = new Flight();
             $flight->airport = $airport ;
             $flight->trip_id = $tripId;
-            $flight->save();
-            return response()->json(['Status'=>'Success'],200);
-        }
-        return response()->json(['Status'=>'Fail'],400);
+            if($flight->save())
+            {
+                return ['Status'=>'Success'];
+            }
+            else
+            {
+                return ['Status'=>'Fail'];      
+            }            
+        }       
     }
 
     public static function DeleteFlight($flightId)
@@ -31,24 +36,21 @@ class Flight extends Model
         if($flight)
         {
             $flight->delete();
-            return response()->json(['Status'=>'Success'],200);
-        }
-        return response()->json("Not Found",400);      
+        }   
     }
 
     public static function GetAllFlights()
     {
-        $flights = Flight::all();
-        return response()->json($flights);
+        return Flight::all();       
     }
 
     public static function GetFlight($flight_id)
     {
-        $flight = Flight::find($flight_id);
+        $flight = Flight::find($flight_id);       
         if($flight)
         {
-            return response()->json($trip);     
+            return $flight;     
         }
-        return response()->json("Not Found",400);
+        return "Not Found";
     }
 }

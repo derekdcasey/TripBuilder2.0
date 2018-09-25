@@ -15,8 +15,11 @@ class Trip extends Model
     {      
         $trip = new Trip();
         $trip->name = $name;
-        $trip->save();
-        return response()->json(['Status'=>'Success'],200);
+        if($trip->save())
+        {
+            return 'Success';
+        }    
+        return 'Fail';
     }
 
     public static function DeleteTrip($tripId)
@@ -29,10 +32,8 @@ class Trip extends Model
             {
                 $f->delete();
             }
-            $trip->delete();
-            return response()->json(['Status'=>'Success'],200);
-        }
-        return response()->json("Not Found",400);
+            $trip->delete();    
+        }     
     }
 
     public static function GetTrip($trip_id)
@@ -40,15 +41,14 @@ class Trip extends Model
         $trip = Trip::with('flights')->where('id',$trip_id)->first();
         if($trip)
         {
-            return response()->json($trip);   
+            return $trip;  
         }  
-        return response()->json("Not Found",400);
+        return 'Not Found';
     }
 
     public static function GetAllTrips()
     {
-        $trips = Trip::with('flights')->get();
-        return response()->json($trips);
+        return Trip::with('flights')->get();    
     }
 
 }
