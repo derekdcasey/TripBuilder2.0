@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Flight extends Model
 {
-    public function trip(){
+    public function trip()
+    {
         return $this->belongsTo('App\Trip');
     }
-
 
     public static function CreateFlight($airport,$tripId)
     {
@@ -33,7 +33,22 @@ class Flight extends Model
             $flight->delete();
             return response()->json(['Status'=>'Success'],200);
         }
-            return response()->json(['Status'=>'Fail'],400);       
+        return response()->json("Not Found",400);      
     }
 
+    public static function GetAllFlights()
+    {
+        $flights = Flight::all();
+        return response()->json($flights);
+    }
+
+    public static function GetFlight($flight_id)
+    {
+        $flight = Flight::find($flight_id);
+        if($flight)
+        {
+            return response()->json($trip);     
+        }
+        return response()->json("Not Found",400);
+    }
 }

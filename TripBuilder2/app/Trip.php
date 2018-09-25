@@ -32,6 +32,23 @@ class Trip extends Model
             $trip->delete();
             return response()->json(['Status'=>'Success'],200);
         }
-
+        return response()->json("Not Found",400);
     }
+
+    public static function GetTrip($trip_id)
+    {
+        $trip = Trip::with('flights')->where('id',$trip_id)->first();
+        if($trip)
+        {
+            return response()->json($trip);   
+        }  
+        return response()->json("Not Found",400);
+    }
+
+    public static function GetAllTrips()
+    {
+        $trips = Trip::with('flights')->get();
+        return response()->json($trips);
+    }
+
 }

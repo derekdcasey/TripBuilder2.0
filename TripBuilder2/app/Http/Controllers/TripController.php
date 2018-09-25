@@ -8,21 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
 {
-     /**
-     * Returns a list of all trips
-     * 
-     *
-     */
-    public function getTrips()
-    {
-        $trips = Trip::with('flights')->get();
-        return response()->json($trips);
-    }
 
-    /**
+       /**
      * Returns a list of all airports, alphabetical order
      * 
-     *
+     * route: /api/getAirports
      */
     public function getAirports()
     {
@@ -30,9 +20,20 @@ class TripController extends Controller
         return response()->json($airports);
     }
 
+     /**
+     * Returns a list of all trips
+     *  route: /api/trips
+     *
+     */
+    public function getTrips()
+    {
+        Trip::GetAllTrips();
+    }
+
+
     /**
      * Creates a Trip
-     * 
+     * route: /createtrip
      *
      */
     public function postCreateTrip(Request $request)
@@ -42,66 +43,32 @@ class TripController extends Controller
             'name' => 'required|max:50'
 
         ]);
+        
+        $name = $request['name'];
 
-        Trip::CreateTrip($request['name']);
-       
+        Trip::CreateTrip($name);
+     
     }
 
     /**
      * Deletes a Trip
      * @param  int  Id of trip to be deleted
-     *
+     * route: /api/trip-delete/{trip_id}
      */
     public function getDeleteTrip($tripId)
     {
         Trip::DeleteTrip($tripId);
     }
 
-    /**
-     * Deletes a Flight
-     * @param  int  Id of flight to be deleted
-     *
-     */
-    public function getDeleteFlight($flight_id)
-    {
-        Flight::DeleteFlight($flight_id);
-    }
 
     /**
      *Returns specified Trip with its flights
      * @param  int  Id of flight
-     *
+     * route: /api/trips/{trip_id}
      */
     public function getSingleTrip($trip_id)
     {
-        $trip = Trip::with('flights')->where('id',$trip_id)->first();
-        return response()->json($trip);     
+       Trip::GetTrip($trip_id); 
     }
     
-    public function postAddFlight(Request $request)
-    {
-        //Validate the request
-        $this->validate($request,[
-            'airport' => 'required|max:50',
-            'trip_id'=>'required'
-        ]);
-
-        $airport = $request['airport'];
-        $tripId = $request['trip_id'];
-
-        Flight::CreateFlight($airport, $tripId);
-
-    }
-
-    /**
-     *Returns All Flights
-     * 
-     *
-     */
-    public function getFlights()
-    {
-        $flights = Flight::all();
-        return response()->json($flights);
-    }
-
 }

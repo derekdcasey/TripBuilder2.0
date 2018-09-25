@@ -17,7 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::get('/getAirports',[
+    'uses' => 'TripController@getAirports'
+]);
 
 
 Route::get('/trip-delete/{trip_id}',[
@@ -37,9 +39,17 @@ Route::get('/trips/{trip_id}',[
 ]);
 
 Route::post('/addflight',[
-    'uses' => 'TripController@postAddFlight'
+    'uses' => 'FlightController@postAddFlight'
 ]);
 
 Route::get('/flight-delete/{flight_id}',[
-    'uses' => 'TripController@getDeleteFlight'
+    'uses' => 'FlightController@getDeleteFlight'
+]);
+
+Route::get('/flights/{flight_id}',[
+    'uses' => 'FlightController@getSingleFlight'
+]);
+
+Route::get('/flights',[
+    'uses' => 'FlightController@getFlights'
 ]);
