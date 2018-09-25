@@ -11,10 +11,12 @@ class Trip extends Model
         return $this->hasMany('App\Flight');
     }
 
-    public function CreateTrip($name)
+    public static function CreateTrip($name)
     {      
-        $this->name = $name;
-        $this->save();
+        $trip = new Trip();
+        $trip->name = $name;
+        $trip->save();
+        return response()->json(['Status'=>'Success'],200);
     }
 
     public static function DeleteTrip($tripId)

@@ -6,7 +6,6 @@ use App\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-
 class TripController extends Controller
 {
      /**
@@ -45,8 +44,7 @@ class TripController extends Controller
         ]);
 
         Trip::CreateTrip($request['name']);
-        return response()->json(['Status'=>'Success'],200);
-      
+       
     }
 
     /**
@@ -84,21 +82,15 @@ class TripController extends Controller
     {
         //Validate the request
         $this->validate($request,[
-            'airport' => 'required|max:50'
+            'airport' => 'required|max:50',
+            'trip_id'=>'required'
         ]);
-        
-        $trip = Trip::find($request['trip_id']);
 
-        if($trip)
-        {
-            Flight::CreateFlight($request['airport'],$trip->id);
-            return response()->json(['Status'=>'Success'],200);
-        }
-        else
-        {
-            return response()->json(['Status'=>'Fail'],400);
-        }
-        
+        $airport = $request['airport'];
+        $tripId = $request['trip_id'];
+
+        Flight::CreateFlight($airport, $tripId);
+
     }
 
     /**

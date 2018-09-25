@@ -159,7 +159,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        App\Providers\MyAppServiceProvider::class,
     ],
 
     /*
@@ -209,6 +209,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Trip' => App\Facades\Trip::class,
+        'Flight' => App\Facades\Flight::class,
     ],
 
 ];
